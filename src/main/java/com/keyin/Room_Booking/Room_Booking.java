@@ -1,22 +1,25 @@
 package com.keyin.Room_Booking;
 
+import com.keyin.Rooms.Room;
+import com.keyin.Users.User;
 import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
 public class Room_Booking {
+
     @Id
-    @SequenceGenerator(name = "greeting_sequence", sequenceName = "greeting_sequence", allocationSize = 1, initialValue=1)
-    @GeneratedValue(generator = "greeting_sequence")
+    @SequenceGenerator(name = "room_booking_sequence", sequenceName = "room_booking_sequence", allocationSize = 1, initialValue = 1)
+    @GeneratedValue(generator = "room_booking_sequence")
     private long room_booking_id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private long user_id;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)
-    private long room_id;
+    private Room room;
 
     private Date start_date;
     private Date end_date;
@@ -29,20 +32,20 @@ public class Room_Booking {
         this.room_booking_id = room_booking_id;
     }
 
-    public long getUser_id() {
-        return user_id;
+    public User getUser() {
+        return user;
     }
 
-    public void setUser_id(long user_id) {
-        this.user_id = user_id;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public long getRoom_id() {
-        return room_id;
+    public Room getRoom() {
+        return room;
     }
 
-    public void setRoom_id(long room_id) {
-        this.room_id = room_id;
+    public void setRoom(Room room) {
+        this.room = room;
     }
 
     public Date getStart_date() {
