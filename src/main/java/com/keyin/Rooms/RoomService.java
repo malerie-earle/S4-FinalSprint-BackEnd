@@ -39,7 +39,7 @@ public class RoomService {
         //rooms that do not meet the occupancy requirement
         availableRooms = availableRooms.stream().filter(room -> room.getOccupancy() > occupancy).collect(Collectors.toList());
 
-        List<Room_Booking> conflictingBookingsFromDateRange = room_bookingService.getConflictingRooms(start, end);
+        List<Room_Booking> conflictingBookingsFromDateRange = room_bookingService.getConflictingRoomBookings(start, end);
 
         //remove left over rooms that conflict with date range
         for(Room_Booking booking : conflictingBookingsFromDateRange){

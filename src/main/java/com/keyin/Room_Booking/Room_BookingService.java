@@ -58,7 +58,9 @@ public class Room_BookingService {
         return null;
     }
 
-    public List<Room_Booking> getConflictingRooms(Date start, Date end){
-        //to DO!
+    public List<Room_Booking> getConflictingRoomBookings(Date start, Date end){
+        List<Room_Booking> conflictingRoomBookings = getAllRoom_Bookings();
+        conflictingRoomBookings = conflictingRoomBookings.stream().filter(booking -> (start.after(booking.getStart_date()) && start.before(booking.getEnd_date())) || (start.before(booking.getStart_date()) && end.after(booking.getEnd_date()))).collect(Collectors.toList());
+        return conflictingRoomBookings;
     }
 }
