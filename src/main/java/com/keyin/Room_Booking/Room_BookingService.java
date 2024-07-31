@@ -7,8 +7,11 @@ import com.keyin.Users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class Room_BookingService {
@@ -53,5 +56,11 @@ public class Room_BookingService {
         }
 
         return null;
+    }
+
+    public List<Room_Booking> getConflictingRoomBookings(Date start, Date end){
+        List<Room_Booking> conflictingRoomBookings = getAllRoom_Bookings();
+        conflictingRoomBookings = conflictingRoomBookings.stream().filter(booking -> (start.after(booking.getStart_date()) && start.before(booking.getEnd_date())) || (start.before(booking.getStart_date()) && end.after(booking.getEnd_date()))).collect(Collectors.toList());
+        return conflictingRoomBookings;
     }
 }

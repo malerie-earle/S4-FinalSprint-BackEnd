@@ -1,11 +1,9 @@
 package com.keyin.Rooms;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -22,5 +20,10 @@ public class RoomController {
     @GetMapping("/api/rooms/{id}")
     public Room getRoom(@PathVariable Long id){
         return roomService.getRoomByID(id);
+    }
+
+    @PostMapping("/api/rooms/available")
+    public List<Room> getAvailableRooms(@RequestParam Date startDate, @RequestParam Date endDate, @RequestParam int occupancy){
+        return roomService.getRoomsFilteredBySearch(startDate,endDate,occupancy);
     }
 }

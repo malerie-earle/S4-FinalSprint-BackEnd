@@ -13,10 +13,13 @@ public class Room {
     @GeneratedValue(generator = "room_sequence")
     private long room_id;
     private int room_number;
-    private String type;
+    private String room_name;
     private String description;
+    private String beds;
     private int occupancy;
-    private String image;
+    private String image1;
+    private String image2;
+    private String image3;
 
     public long getRoom_id() {
         return room_id;
@@ -34,12 +37,12 @@ public class Room {
         this.room_number = room_number;
     }
 
-    public String getType() {
-        return type;
+    public String getRoom_name() {
+        return room_name;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setRoom_name(String room_name) {
+        this.room_name = room_name;
     }
 
     public String getDescription() {
@@ -50,6 +53,14 @@ public class Room {
         this.description = description;
     }
 
+    public String getBeds() {
+        return beds;
+    }
+
+    public void setBeds(String beds) {
+        this.beds = beds;
+    }
+
     public int getOccupancy() {
         return occupancy;
     }
@@ -58,11 +69,27 @@ public class Room {
         this.occupancy = occupancy;
     }
 
-    public String getImage() {
-        return image;
+    public String getImage1() {
+        return image1;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImage1(String image1) {
+        this.image1 = image1;
+    }
+
+    public String getImage2() {
+        return image2;
+    }
+
+    public void setImage2(String image2) {
+        this.image2 = image2;
+    }
+
+    public String getImage3() {
+        return image3;
+    }
+
+    public void setImage3(String image3) {
+        this.image3 = image3;
     }
 }
