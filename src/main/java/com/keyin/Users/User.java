@@ -1,9 +1,5 @@
 package com.keyin.Users;
-
-import com.keyin.Activity_Booking.Activity_Booking;
 import jakarta.persistence.*;
-
-import java.util.Set;
 
 @Entity
 public class User {
@@ -16,38 +12,27 @@ public class User {
     private String fName;
     private String lName;
 
-    @OneToMany(mappedBy = "user")
-    private Set<Activity_Booking> bookings;
-
-    public Long getId() {
+    public Long getUserId() {
         return user_id;
     }
 
-    public void setId(Long user_id) {
+    public void setUserId(Long user_id) {
         this.user_id = user_id;
     }
 
-    public String getfName() {
+    public String getFName() {
         return fName;
     }
 
-    public void setfName(String fName) {
+    public void setFName(String fName) {
         this.fName = fName;
     }
 
-    public String getlName() {
+    public String getLName() {
         return lName;
     }
 
-    public void setlName(String lName) {
+    public void setLName(String lName) {
         this.lName = lName;
-    }
-
-    public Set<Activity_Booking> getBookings() {
-        return bookings;
-    }
-
-    public void setBookings(Set<Activity_Booking> bookings) {
-        this.bookings = bookings;
     }
 }
