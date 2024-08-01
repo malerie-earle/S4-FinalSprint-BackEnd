@@ -1,8 +1,9 @@
 package com.keyin.Activity_Booking;
-
 import com.keyin.Activities.Activity;
 import com.keyin.Users.User;
 import jakarta.persistence.*;
+import java.time.LocalDate;
+
 
 @Entity
 public class Activity_Booking {
@@ -19,6 +20,9 @@ public class Activity_Booking {
     @ManyToOne
     @JoinColumn(name = "activity_id", nullable = false)
     private Activity activity;
+
+    @Column(nullable = false)
+    private LocalDate date;
 
     public Long getActivity_booking_id() {
         return activity_booking_id;
@@ -42,5 +46,13 @@ public class Activity_Booking {
 
     public void setActivity(Activity activity) {
         this.activity = activity;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }
