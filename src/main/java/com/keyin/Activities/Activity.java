@@ -1,10 +1,5 @@
 package com.keyin.Activities;
-
-import com.keyin.Activity_Booking.Activity_Booking;
 import jakarta.persistence.*;
-
-import java.util.Date;
-import java.util.Set;
 
 @Entity
 public class Activity {
@@ -13,17 +8,14 @@ public class Activity {
     @SequenceGenerator(name = "activity_sequence", sequenceName = "activity_sequence", allocationSize = 1, initialValue=1)
     @GeneratedValue(generator = "activity_sequence")
     private Long activity_id;
-
     private String name;
-    @Temporal(TemporalType.DATE)
-    private Date date;
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
-    private String image;
     private int spots;
-
-    @OneToMany(mappedBy = "activity")
-    private Set<Activity_Booking> bookings;
-
+    private String image1;
+    private String image2;
+    private String image3;
 
     public Long getActivityId() {
         return activity_id;
@@ -41,28 +33,12 @@ public class Activity {
         this.name = name;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 
     public int getSpots() {
@@ -73,11 +49,27 @@ public class Activity {
         this.spots = spots;
     }
 
-    public Set<Activity_Booking> getBookings() {
-        return bookings;
+    public String getImage1() {
+        return image1;
     }
 
-    public void setBookings(Set<Activity_Booking> bookings) {
-        this.bookings = bookings;
+    public void setImage1(String image1) {
+        this.image1 = image1;
+    }
+
+    public String getImage2() {
+        return image2;
+    }
+
+    public void setImage2(String image2) {
+        this.image2 = image2;
+    }
+
+    public String getImage3() {
+        return image3;
+    }
+
+    public void setImage3(String image3) {
+        this.image3 = image3;
     }
 }
