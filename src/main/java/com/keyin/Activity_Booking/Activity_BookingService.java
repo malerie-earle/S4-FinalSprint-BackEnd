@@ -14,7 +14,7 @@ import java.util.Optional;
 public class Activity_BookingService {
 
     @Autowired
-    private Activity_Booking_Repository activityBookingRepository;
+    private Activity_BookingRepository activityBookingRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -69,9 +69,8 @@ public class Activity_BookingService {
                 return false;
             }
             Activity activityToCheck = activity.get();
-            int totalSpots = activityToCheck.getSpots(); // Assuming this method exists
+            int totalSpots = activityToCheck.getSpots();
             int bookedSpots = activityBookingRepository.countByActivityAndDate(activityToCheck, date);
-
             return bookedSpots < totalSpots;
     }
 
@@ -81,7 +80,6 @@ public class Activity_BookingService {
         for (Activity activity : allActivities) {
             int totalSpots = activity.getSpots();
             int bookedSpots = activityBookingRepository.countByActivityAndDate(activity, date);
-
             if (bookedSpots < totalSpots) {
                availableActivities.add(activity);
             }

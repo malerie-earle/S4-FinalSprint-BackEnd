@@ -12,7 +12,7 @@ import java.util.List;
 public class Activity_BookingController {
 
     @Autowired
-    private Activity_Booking_Repository activityBookingRepository;
+    private Activity_BookingRepository activityBookingRepository;
     @Autowired
     private Activity_BookingService activityBookingService;
 
@@ -30,22 +30,22 @@ public class Activity_BookingController {
     }
 
     @GetMapping("/activities/bookings/user/{user_id}")
-        public List <Activity_Booking> getActivityBookingsByUserId(@PathVariable Long user_id){
+        public List<Activity_Booking> getActivityBookingsByUserId(@PathVariable Long user_id){
         return activityBookingService.getActivityBookingsByUserId(user_id);
     }
 
     @GetMapping("/activities/bookings/activity/{activity_id}")
-    public List <Activity_Booking> getActivityBookingsByActivityId(@PathVariable Long activity_id){
+    public List<Activity_Booking> getActivityBookingsByActivityId(@PathVariable Long activity_id){
         return activityBookingService.getActivityBookingsByActivityId(activity_id);
     }
 
     @GetMapping("/activities/{activity_id}/availability")
-    public boolean checkActivityAvailability(@PathVariable Long activity_id, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+    public boolean checkAvailabilityByActivityId(@PathVariable Long activity_id, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         return activityBookingService.checkAvailabilityByActivityId(activity_id, date);
     }
 
     @GetMapping("/activities/availability/all")
-    public List <Activity> checkAllActivityAvailability(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+    public List<Activity> checkAllActivityAvailability(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         return activityBookingService.checkAllActivityAvailability(date);
     }
 }

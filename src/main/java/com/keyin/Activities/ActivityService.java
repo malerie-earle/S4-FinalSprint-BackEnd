@@ -11,7 +11,7 @@ public class ActivityService {
     private ActivityRepository activityRepository;
 
     public List<Activity> getAllActivities() {
-        return (List<Activity>) activityRepository.findAll();
+        return activityRepository.findAll();
     }
 
     public Optional<Activity> getActivityById(Long activityId) {
