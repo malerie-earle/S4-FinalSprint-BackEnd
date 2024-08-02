@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 public class Activity {
 
     @Id
-    @SequenceGenerator(name = "activity_sequence", sequenceName = "activity_sequence", allocationSize = 1, initialValue=1)
+    @SequenceGenerator(name = "activity_sequence", sequenceName = "activity_sequence", allocationSize = 1, initialValue = 1)
     @GeneratedValue(generator = "activity_sequence")
     private Long activity_id;
     private String name;
@@ -13,6 +13,7 @@ public class Activity {
     @Column(columnDefinition = "LONGTEXT")
     private String description;
     private int spots;
+    private String time;
     private String image1;
     private String image2;
     private String image3;
@@ -72,4 +73,14 @@ public class Activity {
     public void setImage3(String image3) {
         this.image3 = image3;
     }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 }
+
+

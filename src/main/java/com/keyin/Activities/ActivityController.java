@@ -2,7 +2,6 @@ package com.keyin.Activities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -18,7 +17,7 @@ public class ActivityController {
     }
 
     @GetMapping("/activities/{activity_id}")
-    public Optional<Activity> getActivityById(@PathVariable Long activity_id){
+    public Activity getActivityById(@PathVariable Long activity_id){
         return activityService.getActivityById(activity_id);
     }
 
