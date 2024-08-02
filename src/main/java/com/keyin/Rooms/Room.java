@@ -2,24 +2,40 @@ package com.keyin.Rooms;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Column;
 
 @Entity
 public class Room {
 
     @Id
-    @SequenceGenerator(name = "room_sequence", sequenceName = "room_sequence", allocationSize = 1, initialValue=1)
-    @GeneratedValue(generator = "room_sequence")
+    @SequenceGenerator(name = "room_sequence", sequenceName = "room_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "room_sequence")
     private long room_id;
+
     private int room_number;
     private String room_name;
+    private String view;
+    private String type;
+
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
+
     private String beds;
     private int occupancy;
+
+    @Column(columnDefinition = "LONGTEXT")
     private String image1;
+
+    @Column(columnDefinition = "LONGTEXT")
     private String image2;
+
+    @Column(columnDefinition = "LONGTEXT")
     private String image3;
+
+    // Getters and Setters
 
     public long getRoom_id() {
         return room_id;
@@ -43,6 +59,22 @@ public class Room {
 
     public void setRoom_name(String room_name) {
         this.room_name = room_name;
+    }
+
+    public String getView() {
+        return view;
+    }
+
+    public void setView(String view) {
+        this.view = view;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getDescription() {
