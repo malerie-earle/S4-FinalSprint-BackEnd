@@ -23,7 +23,7 @@ public class RoomController {
     }
 
     @PostMapping("/api/rooms/available")
-    public List<Room> getAvailableRooms(@RequestParam Date startDate, @RequestParam Date endDate, @RequestParam int occupancy){
-        return roomService.getRoomsFilteredBySearch(startDate,endDate,occupancy);
+    public List<Room> getAvailableRooms(@RequestParam Date startDate, @RequestParam Date endDate, @RequestParam int occupancy, @RequestParam String type, @RequestParam String view){
+        return roomService.getRoomsFilteredBySearch(startDate,endDate,occupancy, type, view);
     }
 }
