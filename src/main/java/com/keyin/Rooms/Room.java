@@ -35,6 +35,33 @@ public class Room {
     @Column(columnDefinition = "LONGTEXT")
     private String image3;
 
+    public Room(int i, String s, String oceanfront, String suite, String string, int i1, String s1, String url, String url1, String string1) {
+        long room_id;
+        int room_number;
+        String room_name;
+        String view;
+        String type;
+        String description;
+        String beds;
+        int occupancy;
+        String image1;
+        String image2;
+        String image3;
+    }
+
+    public Room() {
+        int room_number;
+        String room_name;
+        String view;
+        String type;
+        String description;
+        String beds;
+        int occupancy;
+        String image1;
+        String image2;
+        String image3;
+    }
+
     // Getters and Setters
 
     public long getRoom_id() {
