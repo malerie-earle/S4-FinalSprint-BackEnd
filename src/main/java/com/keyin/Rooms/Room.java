@@ -1,16 +1,12 @@
 package com.keyin.Rooms;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
 
 @Entity
 public class Room {
 
     @Id
-    @SequenceGenerator(name = "room_sequence", sequenceName = "room_sequence", allocationSize = 1, initialValue=1)
-    @GeneratedValue(generator = "room_sequence")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long room_id;
     private int room_number;
     private String room_name;
@@ -18,6 +14,8 @@ public class Room {
     private String type;
     private String beds;
     private int occupancy;
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
     private String image1;
     private String image2;

@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class Room_BookingService {
@@ -60,7 +59,29 @@ public class Room_BookingService {
 
     public List<Room_Booking> getConflictingRoomBookings(Date start, Date end){
         List<Room_Booking> conflictingRoomBookings = getAllRoom_Bookings();
-        conflictingRoomBookings = conflictingRoomBookings.stream().filter(booking -> (start.after(booking.getStart_date()) && start.before(booking.getEnd_date())) || (start.before(booking.getStart_date()) && end.after(booking.getEnd_date()))).collect(Collectors.toList());
+        conflictingRoomBookings = conflictingRoomBookings.stream().filter(booking -> ( (start.after(booking.getStart_date()) || start.equals(booking.getStart_date())) && (start.before(booking.getEnd_date())) || start.equals(booking.getEnd_date())) || ((end.after(booking.getStart_date()) || end.equals(booking.getStart_date())) && (end.before(booking.getEnd_date())) || end.equals(booking.getEnd_date())) || (start.before(booking.getStart_date()) && end.after(booking.getEnd_date()))).collect(Collectors.toList());
         return conflictingRoomBookings;
+    }
+
+    public Room_Booking createRoom_Booking(long userId, long roomId, Date start, Date end){
+        Optional<User> user = userRepository.findById(userId);
+        Optional<Room> room = roomRepository.findById(roomId);
+        if(user.isPresent() && room.isPresent()){
+            Room roomToBook = room.get();
+            List<Room_Booking> conflictingBookings = getConflictingRoomBookings(start,end);
+            // we check for conflicting bookings
+            for (Room_Booking booking : conflictingBookings){
+                if(booking.getRoom().getRoom_id() == roomToBook.getRoom_id()){
+                    return null;
+                }
+            }
+            Room_Booking newBooking = new Room_Booking();
+            newBooking.setUser(user.get());
+            newBooking.setRoom(roomToBook);
+            newBooking.setStart_date(start);
+            newBooking.setEnd_date(end);
+            return room_bookingRepository.save(newBooking);
+        }
+        return null;
     }
 }
