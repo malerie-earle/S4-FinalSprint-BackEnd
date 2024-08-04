@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+
 @RestController
 @CrossOrigin
 @RequestMapping("/api")
@@ -39,13 +40,13 @@ public class Activity_BookingController {
         return activityBookingService.getActivityBookingsByActivityId(activity_id);
     }
 
-    @GetMapping("/activities/{activity_id}/availability")
-    public boolean checkAvailabilityByActivityId(@PathVariable Long activity_id, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        return activityBookingService.checkAvailabilityByActivityId(activity_id, date);
-    }
-
     @GetMapping("/activities/availability/all")
     public List<Activity> checkAllActivityAvailability(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         return activityBookingService.checkAllActivityAvailability(date);
+    }
+
+    @GetMapping("/activities/availability")
+    public Activity checkAvailabilityByActivityName(@RequestParam String name, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+        return activityBookingService.checkAvailabilityByActivityName(name, date);
     }
 }

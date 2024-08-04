@@ -14,8 +14,12 @@ public class ActivityService {
         return activityRepository.findAll();
     }
 
-    public Optional<Activity> getActivityById(Long activityId) {
-            return activityRepository.findById(activityId);
+    public Activity getActivityById(Long activity_id) {
+        Optional<Activity> result = activityRepository.findById(activity_id);
+        if (result.isPresent()) {
+            return result.get();
+        }
+        return null;
     }
 
     public Activity createActivity(Activity newActivity) {
