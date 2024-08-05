@@ -9,8 +9,7 @@ import java.util.Date;
 public class Room_Booking {
 
     @Id
-    @SequenceGenerator(name = "room_booking_sequence", sequenceName = "room_booking_sequence", allocationSize = 1, initialValue = 1)
-    @GeneratedValue(generator = "room_booking_sequence")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long room_booking_id;
 
     @ManyToOne

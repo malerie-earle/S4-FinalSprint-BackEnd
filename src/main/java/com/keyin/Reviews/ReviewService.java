@@ -15,7 +15,7 @@ public class ReviewService {
         List<ReviewResponseDTO> reviews = new ArrayList<>();
         for (Review review : userReviews) {
             ReviewResponseDTO responseDTO = new ReviewResponseDTO();
-            responseDTO.setFName(review.getUser().getFname());
+            responseDTO.setFName(review.getUser().getFName());
             responseDTO.setLName(review.getUser().getLName());
             responseDTO.setRating(review.getRating());
             responseDTO.setText(review.getText());

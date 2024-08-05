@@ -7,14 +7,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Column;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 
 @Entity
 public class Room {
 
     @Id
-    @SequenceGenerator(name = "room_sequence", sequenceName = "room_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "room_sequence")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private long room_id;
 
