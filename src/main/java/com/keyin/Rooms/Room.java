@@ -1,25 +1,76 @@
 package com.keyin.Rooms;
 
-import jakarta.persistence.*;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Column;
+
 
 @Entity
 public class Room {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "room_sequence", sequenceName = "room_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "room_sequence")
+
     private long room_id;
+
     private int room_number;
     private String room_name;
     private String view;
     private String type;
+
     private String beds;
     private int occupancy;
-    @Lob
+
     @Column(columnDefinition = "LONGTEXT")
     private String description;
+
+    @Column(columnDefinition = "LONGTEXT")
+
     private String image1;
+
+    @Column(columnDefinition = "LONGTEXT")
     private String image2;
+
+    @Column(columnDefinition = "LONGTEXT")
     private String image3;
+
+    // Default constructor
+    public Room() {
+    }
+
+//    public Room(long room_id, int room_number, String room_name, String view, String type, String beds, int occupancy, String description, String image1, String image2, String image3) {
+//        this.room_id = room_id;
+//        this.room_number = room_number;
+//        this.room_name = room_name;
+//        this.view = view;
+//        this.type = type;
+//        this.beds = beds;
+//        this.occupancy = occupancy;
+//        this.description = description;
+//        this.image1 = image1;
+//        this.image2 = image2;
+//        this.image3 = image3;
+//    }
+
+    public Room(int room_number, String room_name, String view, String type, String beds, int occupancy, String description, String image1, String image2, String image3) {
+        this.room_number = room_number;
+        this.room_name = room_name;
+        this.view = view;
+        this.type = type;
+        this.beds = beds;
+        this.occupancy = occupancy;
+        this.description = description;
+        this.image1 = image1;
+        this.image2 = image2;
+        this.image3 = image3;
+    }
+
+    // Getters and Setters
 
     public long getRoom_id() {
         return room_id;

@@ -1,23 +1,50 @@
 package com.keyin.Activities;
+
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "activity")
 public class Activity {
 
     @Id
-    @SequenceGenerator(name = "activity_sequence", sequenceName = "activity_sequence", allocationSize = 1, initialValue = 1)
-    @GeneratedValue(generator = "activity_sequence")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long activity_id;
+
     private String name;
+
     @Lob
     @Column(columnDefinition = "LONGTEXT")
     private String description;
+
     private int spots;
+
     private String time;
+
+    @Column(length = 500)
     private String image1;
+
+    @Column(length = 500)
     private String image2;
+
+    @Column(length = 500)
     private String image3;
 
+    // Default constructor
+    public Activity() {
+    }
+
+    // Parameterized constructor
+    public Activity(String name, String description, int spots, String time, String image1, String image2, String image3) {
+        this.name = name;
+        this.description = description;
+        this.spots = spots;
+        this.time = time;
+        this.image1 = image1;
+        this.image2 = image2;
+        this.image3 = image3;
+    }
+
+    // Getters and setters
     public Long getActivityId() {
         return activity_id;
     }
@@ -50,6 +77,14 @@ public class Activity {
         this.spots = spots;
     }
 
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
     public String getImage1() {
         return image1;
     }
@@ -73,14 +108,4 @@ public class Activity {
     public void setImage3(String image3) {
         this.image3 = image3;
     }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
 }
-
-
