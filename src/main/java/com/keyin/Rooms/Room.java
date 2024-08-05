@@ -39,19 +39,19 @@ public class Room {
     public Room() {
     }
 
-    public Room(long room_id, int room_number, String room_name, String view, String type, String beds, int occupancy, String description, String image1, String image2, String image3) {
-        this.room_id = room_id;
-        this.room_number = room_number;
-        this.room_name = room_name;
-        this.view = view;
-        this.type = type;
-        this.beds = beds;
-        this.occupancy = occupancy;
-        this.description = description;
-        this.image1 = image1;
-        this.image2 = image2;
-        this.image3 = image3;
-    }
+//    public Room(long room_id, int room_number, String room_name, String view, String type, String beds, int occupancy, String description, String image1, String image2, String image3) {
+//        this.room_id = room_id;
+//        this.room_number = room_number;
+//        this.room_name = room_name;
+//        this.view = view;
+//        this.type = type;
+//        this.beds = beds;
+//        this.occupancy = occupancy;
+//        this.description = description;
+//        this.image1 = image1;
+//        this.image2 = image2;
+//        this.image3 = image3;
+//    }
 
     public Room(int room_number, String room_name, String view, String type, String beds, int occupancy, String description, String image1, String image2, String image3) {
         this.room_number = room_number;
