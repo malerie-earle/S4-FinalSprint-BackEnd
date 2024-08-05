@@ -30,14 +30,23 @@ public class RoomService {
         return null;
     }
 
-    //DOESNT WORK
-    public List<Room> getRoomsFilteredBySearch(Date start, Date end, int occupancy){
+    public List<Room> getRoomsFilteredBySearch(Date start, Date end, int occupancy, String type, String view){
         Room_BookingService room_bookingService = new Room_BookingService();
 
         List<Room> availableRooms = (List<Room>) roomRepository.findAll();
 
         //rooms that do not meet the occupancy requirement
-        availableRooms = availableRooms.stream().filter(room -> room.getOccupancy() > occupancy).collect(Collectors.toList());
+        if(occupancy != 0){
+            availableRooms = availableRooms.stream().filter(room -> room.getOccupancy() > occupancy).collect(Collectors.toList());
+        }
+
+        if(type != null && !type.equals("")){
+            availableRooms = availableRooms.stream().filter(room -> room.getType().contains(type)).collect(Collectors.toList());
+        }
+
+        if(view != null && !view.equals("")){
+            availableRooms = availableRooms.stream().filter(room -> room.getView().contains(view)).collect(Collectors.toList());
+        }
 
         List<Room_Booking> conflictingBookingsFromDateRange = room_bookingService.getConflictingRoomBookings(start, end);
 

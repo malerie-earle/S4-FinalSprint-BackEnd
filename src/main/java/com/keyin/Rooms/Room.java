@@ -1,22 +1,22 @@
 package com.keyin.Rooms;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
 
 @Entity
 public class Room {
 
     @Id
-    @SequenceGenerator(name = "room_sequence", sequenceName = "room_sequence", allocationSize = 1, initialValue=1)
-    @GeneratedValue(generator = "room_sequence")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long room_id;
     private int room_number;
     private String room_name;
-    private String description;
+    private String view;
+    private String type;
     private String beds;
     private int occupancy;
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String description;
     private String image1;
     private String image2;
     private String image3;
@@ -45,12 +45,20 @@ public class Room {
         this.room_name = room_name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getView() {
+        return view;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setView(String view) {
+        this.view = view;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getBeds() {
@@ -67,6 +75,14 @@ public class Room {
 
     public void setOccupancy(int occupancy) {
         this.occupancy = occupancy;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getImage1() {
