@@ -20,11 +20,11 @@ public class Room {
     private String view;
     private String type;
 
-    @Column(columnDefinition = "LONGTEXT")
-    private String description;
-
     private String beds;
     private int occupancy;
+
+    @Column(columnDefinition = "LONGTEXT")
+    private String description;
 
     @Column(columnDefinition = "LONGTEXT")
     private String image1;
@@ -35,31 +35,31 @@ public class Room {
     @Column(columnDefinition = "LONGTEXT")
     private String image3;
 
-    public Room(int i, String s, String oceanfront, String suite, String string, int i1, String s1, String url, String url1, String string1) {
-        long room_id;
-        int room_number;
-        String room_name;
-        String view;
-        String type;
-        String description;
-        String beds;
-        int occupancy;
-        String image1;
-        String image2;
-        String image3;
+    public Room(long room_id, int room_number, String room_name, String view, String type, String beds, int occupancy, String description, String image1, String image2, String image3) {
+        this.room_id = room_id;
+        this.room_number = room_number;
+        this.room_name = room_name;
+        this.view = view;
+        this.type = type;
+        this.beds = beds;
+        this.occupancy = occupancy;
+        this.description = description;
+        this.image1 = image1;
+        this.image2 = image2;
+        this.image3 = image3;
     }
 
-    public Room() {
-        int room_number;
-        String room_name;
-        String view;
-        String type;
-        String description;
-        String beds;
-        int occupancy;
-        String image1;
-        String image2;
-        String image3;
+    public Room(int room_number, String room_name, String view, String type, String beds, int occupancy, String description, String image1, String image2, String image3) {
+        this.room_number = room_number;
+        this.room_name = room_name;
+        this.view = view;
+        this.type = type;
+        this.beds = beds;
+        this.occupancy = occupancy;
+        this.description = description;
+        this.image1 = image1;
+        this.image2 = image2;
+        this.image3 = image3;
     }
 
     // Getters and Setters
@@ -104,14 +104,6 @@ public class Room {
         this.type = type;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getBeds() {
         return beds;
     }
@@ -126,6 +118,14 @@ public class Room {
 
     public void setOccupancy(int occupancy) {
         this.occupancy = occupancy;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getImage1() {

@@ -29,7 +29,19 @@ public class Activity {
     @Column(length = 500)
     private String image3;
 
-    public Activity(String s, String s1, int i, String s2, String url, String url1, String url2) {
+    // Default constructor
+    public Activity() {
+    }
+
+    // Parameterized constructor
+    public Activity(String name, String description, int spots, String time, String image1, String image2, String image3) {
+        this.name = name;
+        this.description = description;
+        this.spots = spots;
+        this.time = time;
+        this.image1 = image1;
+        this.image2 = image2;
+        this.image3 = image3;
     }
 
     // Getters and setters

@@ -1,28 +1,35 @@
 package com.keyin.IslandSerenity;
 
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
+import org.springframework.stereotype.Component;
 import com.keyin.Users.User;
 import com.keyin.Users.UserRepository;
-import com.keyin.Activities.Activity;
-import com.keyin.Activities.ActivityRepository;
 import com.keyin.Rooms.Room;
 import com.keyin.Rooms.RoomRepository;
-import com.keyin.Reviews.Review;
+import com.keyin.Activities.Activity;
+import com.keyin.Activities.ActivityRepository;
 import com.keyin.Reviews.ReviewRepository;
+import org.springframework.context.annotation.Bean;
 
-@SpringBootApplication
+
+@Component
 public class IslandSerenity {
 
-    public static void main(String[] args) {
-        SpringApplication.run(IslandSerenity.class, args);
+    private final UserRepository userRepository;
+    private final RoomRepository roomRepository;
+    private final ActivityRepository activityRepository;
+    private final ReviewRepository reviewRepository;
+
+    public IslandSerenity(UserRepository userRepository, RoomRepository roomRepository,
+                          ActivityRepository activityRepository, ReviewRepository reviewRepository) {
+        this.userRepository = userRepository;
+        this.roomRepository = roomRepository;
+        this.activityRepository = activityRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     @Bean
-    CommandLineRunner initDatabase(UserRepository userRepository, RoomRepository roomRepository, ActivityRepository activityRepository, ReviewRepository reviewRepository) {
+    CommandLineRunner initDatabase() {
         return args -> {
             // Initialize Users
             userRepository.save(new User("user1", "Password1!"));
@@ -64,5 +71,31 @@ public class IslandSerenity {
             // Add review initialization as needed
         };
     }
-}
-;
+};
+//
+//
+//private void createUserIfNotExists(String username, String password) {
+//    if (!userRepository.existsByUsername(username)) {
+//        userRepository.save(new User(username, password));
+//    }
+//}
+//
+//private void createRoomIfNotExists(int roomNumber, String name, String view, String type, String bed, int maxOccupancy, String description, String... imageUrls) {
+//    if (!roomRepository.existsByRoomNumber(roomNumber)) {
+//        Room room = new Room(roomNumber, name, view, type, bed, maxOccupancy, description);
+//        for (String imageUrl : imageUrls) {
+//            room.addImage(imageUrl); // Assume Room has a method to add images
+//        }
+//        roomRepository.save(room);
+//    }
+//}
+//
+//private void createActivityIfNotExists(String title, String description, int duration, String time, String... imageUrls) {
+//    if (!activityRepository.existsByTitle(title)) {
+//        Activity activity = new Activity(title, description, duration, time);
+//        for (String imageUrl : imageUrls) {
+//            activity.addImage(imageUrl); // Assume Activity has a method to add images
+//        }
+//        activityRepository.save(activity);
+//    }
+//}
