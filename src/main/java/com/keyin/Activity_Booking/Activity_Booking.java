@@ -9,8 +9,7 @@ import java.time.LocalDate;
 public class Activity_Booking {
 
     @Id
-    @SequenceGenerator(name = "activity_booking_sequence", sequenceName = "activity_booking_sequence", allocationSize = 1, initialValue=1)
-    @GeneratedValue(generator = "activity_booking_sequence")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long activity_booking_id;
 
     @ManyToOne

@@ -14,6 +14,9 @@ public class User {
     private String FName;
     private String LName;
 
+    public User(){
+
+    }
     public User(int user_id, String username, String email, String fname, String lname) {
         this.user_id = user_id;
         this.username = username;
