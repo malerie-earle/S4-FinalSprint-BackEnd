@@ -11,7 +11,6 @@ import com.keyin.Activities.ActivityRepository;
 import com.keyin.Reviews.ReviewRepository;
 import org.springframework.context.annotation.Bean;
 
-
 @Component
 public class IslandSerenity {
 
@@ -75,30 +74,3 @@ public class IslandSerenity {
         };
     }
 };
-//
-//
-//private void createUserIfNotExists(String username, String password) {
-//    if (!userRepository.existsByUsername(username)) {
-//        userRepository.save(new User(username, password));
-//    }
-//}
-//
-//private void createRoomIfNotExists(int roomNumber, String name, String view, String type, String bed, int maxOccupancy, String description, String... imageUrls) {
-//    if (!roomRepository.existsByRoomNumber(roomNumber)) {
-//        Room room = new Room(roomNumber, name, view, type, bed, maxOccupancy, description);
-//        for (String imageUrl : imageUrls) {
-//            room.addImage(imageUrl); // Assume Room has a method to add images
-//        }
-//        roomRepository.save(room);
-//    }
-//}
-//
-//private void createActivityIfNotExists(String title, String description, int duration, String time, String... imageUrls) {
-//    if (!activityRepository.existsByTitle(title)) {
-//        Activity activity = new Activity(title, description, duration, time);
-//        for (String imageUrl : imageUrls) {
-//            activity.addImage(imageUrl); // Assume Activity has a method to add images
-//        }
-//        activityRepository.save(activity);
-//    }
-//}

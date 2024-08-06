@@ -30,7 +30,7 @@ class UserServiceTest {
         AdminCreateUserResponse response = AdminCreateUserResponse.builder().build();
         when(cognitoClient.adminCreateUser(any(AdminCreateUserRequest.class))).thenReturn(response);
 
-        userService.signUp("testUser", "testPass", "test@example.com");
+        userService.signUp("testUser", "testPass", "test@example.com", "testFirstName", "testLastName");
     }
 
     @Test
@@ -39,7 +39,7 @@ class UserServiceTest {
                 .thenThrow(CognitoIdentityProviderException.builder().message("Error").build());
 
         assertThrows(RuntimeException.class, () -> {
-            userService.signUp("testUser", "testPass", "test@example.com");
+            userService.signUp("testUser", "testPass", "test@example.com", "testFirstName", "testLastName");
         });
     }
 

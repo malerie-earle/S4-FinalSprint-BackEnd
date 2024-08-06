@@ -6,10 +6,10 @@ import jakarta.persistence.*;
 public class User {
 
     @Id
-    @SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1, initialValue = 1)
-    @GeneratedValue(generator = "user_sequence")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int user_id;
     private String username;
+    private String password;
     private String email;
     private String FName;
     private String LName;
@@ -18,18 +18,21 @@ public class User {
 
     }
     public User(int user_id, String username, String email, String fname, String lname) {
+
         this.user_id = user_id;
         this.username = username;
+        this.password = password;
         this.email = email;
-        this.FName = fname;
-        this.LName = lname;
+        this.FName = FName;
+        this.LName = LName;
     }
 
-    public User(String username, String email, String fname, String lname) {
+    public User(String username, String password, String email, String FName, String LName) {
         this.username = username;
+        this.password = password;
         this.email = email;
-        this.FName = fname;
-        this.LName = lname;
+        this.FName = FName;
+        this.LName = LName;
     }
 
     public User(String username, String email) {
@@ -53,6 +56,14 @@ public class User {
         this.username = username;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -61,11 +72,11 @@ public class User {
         this.email = email;
     }
 
-    public String getFname() {
+    public String getFName() {
         return FName;
     }
 
-    public void setFname(String fname) {
+    public void setFName(String FName) {
         this.FName = FName;
     }
 

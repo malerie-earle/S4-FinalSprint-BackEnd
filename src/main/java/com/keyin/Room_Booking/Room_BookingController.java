@@ -33,7 +33,7 @@ public class Room_BookingController {
         return room_bookingService.getRoom_BookingByRoomId(id);
     }
     @PostMapping("api/rooms/book")
-    public Room_Booking bookRoom(@RequestParam(value = "userid") Long userid, @RequestParam(value = "roomid") Long roomid, @RequestParam(value = "start") String start, @RequestParam(value = "end") String end){
+    public Room_Booking bookRoom(@RequestParam(value = "user_id") Long userid, @RequestParam(value = "room_id") Long roomid, @RequestParam(value = "start") String start, @RequestParam(value = "end") String end){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
         Date startD;
         Date endD;

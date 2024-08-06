@@ -1,25 +1,51 @@
 package com.keyin.Users;
 
-import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitiateAuthRequest;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitiateAuthResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitiateAuthResponse;
 
 @RestController
 @RequestMapping("/api/auth")
+@Validated
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<String> signUp(@RequestParam String username, @RequestParam String password, @RequestParam String email) {
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @GetMapping("/user/{username}")
+    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
         try {
-            userService.signUp(username, password, email);
+            String sql = "SELECT username, email, FName AS firstName, LName AS lastName FROM users WHERE username = ?";
+            UserDTO user = jdbcTemplate.queryForObject(sql, new Object[]{username}, new BeanPropertyRowMapper<>(UserDTO.class));
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PostMapping("/saveUser")
+    public ResponseEntity<String> saveUser(@RequestBody UserDTO userDTO) {
+        try {
+            String sql = "INSERT INTO users (username, email, FName, LName) VALUES (?, ?, ?, ?)";
+            jdbcTemplate.update(sql, userDTO.getUsername(), userDTO.getEmail(), userDTO.getFirstName(), userDTO.getLastName());
+            return ResponseEntity.ok("User data saved successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving user data: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<String> signUp(@RequestParam String username, @RequestParam String password, @RequestParam String email, @RequestParam String firstName, @RequestParam String lastName) {
+        try {
+            userService.signUp(username, password, email, firstName, lastName);
             return ResponseEntity.ok("User registered successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Registration failed: " + e.getMessage());
@@ -29,18 +55,7 @@ public class UserController {
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@RequestParam String username, @RequestParam String password) {
         try {
-            AdminInitiateAuthRequest authRequest = AdminInitiateAuthRequest.builder()
-                    .authFlow("ADMIN_NO_SRP_AUTH")
-                    .userPoolId("your-user-pool-id") // Replace with your actual user pool ID
-                    .clientId("your-client-id") // Replace with your actual client ID
-                    .authParameters(Map.of(
-                            "USERNAME", username,
-                            "PASSWORD", password
-                    ))
-                    .build();
-
             AdminInitiateAuthResponse authResponse = userService.signIn(username, password);
-
             String idToken = authResponse.authenticationResult().idToken();
             String accessToken = authResponse.authenticationResult().accessToken();
             String refreshToken = authResponse.authenticationResult().refreshToken();
