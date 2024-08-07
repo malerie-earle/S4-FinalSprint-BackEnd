@@ -2,6 +2,8 @@ package com.keyin.Users;
 
 import jakarta.persistence.*;
 
+import java.util.Map;
+
 @Entity
 public class User {
 
@@ -9,27 +11,23 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int user_id;
     private String username;
-    private String password;
     private String email;
     private String FName;
     private String LName;
 
-    public User(){
-
+    public User(String username, Map<String, String> attributes) {
     }
-    public User(int user_id, String username, String email, String fname, String lname) {
 
+    public User(int user_id, String username, String email, String fname, String lname) {
         this.user_id = user_id;
         this.username = username;
-        this.password = password;
         this.email = email;
-        this.FName = FName;
-        this.LName = LName;
+        this.FName = fname;
+        this.LName = lname;
     }
 
-    public User(String username, String password, String email, String FName, String LName) {
+    public User(String username, String email, String FName, String LName) {
         this.username = username;
-        this.password = password;
         this.email = email;
         this.FName = FName;
         this.LName = LName;
@@ -38,6 +36,10 @@ public class User {
     public User(String username, String email) {
         this.username = username;
         this.email = email;
+    }
+
+    public User(String userId, String username, Map<String, String> attributes) {
+        // This constructor seems to be incomplete. Ensure to handle attributes if needed.
     }
 
     public int getUserId() {
@@ -54,14 +56,6 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getEmail() {

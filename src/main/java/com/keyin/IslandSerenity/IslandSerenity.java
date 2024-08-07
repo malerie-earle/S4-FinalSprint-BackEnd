@@ -1,15 +1,20 @@
 package com.keyin.IslandSerenity;
 
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
+import com.keyin.Users.UserDTO;
 import com.keyin.Users.User;
 import com.keyin.Users.UserRepository;
+import com.keyin.Users.UserService;
 import com.keyin.Rooms.Room;
 import com.keyin.Rooms.RoomRepository;
 import com.keyin.Activities.Activity;
 import com.keyin.Activities.ActivityRepository;
 import com.keyin.Reviews.ReviewRepository;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class IslandSerenity {
@@ -18,13 +23,16 @@ public class IslandSerenity {
     private final RoomRepository roomRepository;
     private final ActivityRepository activityRepository;
     private final ReviewRepository reviewRepository;
+    private final UserService userService;
 
     public IslandSerenity(UserRepository userRepository, RoomRepository roomRepository,
-                          ActivityRepository activityRepository, ReviewRepository reviewRepository) {
+                          ActivityRepository activityRepository, ReviewRepository reviewRepository,
+                          UserService userService) {
         this.userRepository = userRepository;
         this.roomRepository = roomRepository;
         this.activityRepository = activityRepository;
         this.reviewRepository = reviewRepository;
+        this.userService = userService;
     }
 
     @Bean
@@ -32,11 +40,19 @@ public class IslandSerenity {
         return args -> {
             // Initialize Users
             if (userRepository.count() == 0) {
-                userRepository.save(new User("user1", "Password1!"));
-                userRepository.save(new User("user2", "Password2!"));
-                userRepository.save(new User("user3", "Password3!"));
+                try {
+                    List<UserDTO> cognitoUsers = userService.fetchUsers();
+                    List<User> users = cognitoUsers.stream()
+                            .map(dto -> new User(dto.getUsername(), dto.getAttributes()))
+                            .collect(Collectors.toList());
+                    userRepository.saveAll(users);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-            // Initialize Rooms
+
+
+                    // Initialize Rooms
             if (roomRepository.count() == 0) {
                 roomRepository.save(new Room(101, "Beachfront Swim-Up Suite", "Oceanfront", "Suite", "1 King", 3, "Indulge in breathtaking oceanfront views from this exquisite beachfront swim-up suite. Revel in the luxury of a private balcony, an elegant separate shower, a sumptuous king bed, and a plush sofa, all designed to enhance your coastal escape.", "https://playa-cms-assets.s3.amazonaws.com/styled/Hyatt_Zilara_Cap_Cana/rooms/new20/hyatt-zilara-cap-cana-oceanfront-junior-suite-swim-up-king-room.jpg/a960c533ec670132e78d2f3c022f1a43", "https://playa-cms-assets.s3.amazonaws.com/styled/Hyatt_Zilara_Cap_Cana/rooms/new20/hyatt-zilara-cap-cana-oceanfront-junior-suite-swim-up-king-view-1.jpg/9751fde1af8bd8e515051a97e74e1b07", "https://playa-cms-assets.s3.amazonaws.com/styled/Hyatt_Zilara_Cap_Cana/rooms/new20/hyatt-zilara-cap-cana-junior-suite-swim-up-king-bathroom-1.jpg/8026a666ecf7e95843ee98d52a688c8d"));
                 roomRepository.save(new Room(102, "Oceanfront Terrace Family Suite", "Oceanfront", "Suite", "1 King, 2 Twins, 1 Sofa Bed", 6, "The Oceanfront Terrace Suite is on ground level, emerging from your spacious suite you will be directly on the beach which for children eager to participate in our many water activities will be a huge bonus! The master bedroom boasts a king-size bed and the second bedroom has twin beds. Outdoor living is also provided for with a terrace, day beds and dining area for the family to get together and still never miss a moment of glorious sunshine.", "https://static.arocdn.com/Sites/50/carlisle_bay/uploads/images/rooms46/roomimagethumb34/Beach-Terrace-Suite-Living-Area.jpg", "https://static.arocdn.com/Sites/50/carlisle_bay/uploads/images/rooms46/roomimagethumb34/Beach-Terrace.jpg", "https://static.arocdn.com/Sites/50/carlisle_bay/uploads/images/rooms46/roomimagethumb34/Beach-Terrace-View.jpg"));

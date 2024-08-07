@@ -1,18 +1,14 @@
 package com.keyin.Users;
 
-import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminCreateUserRequest;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminCreateUserResponse;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitiateAuthRequest;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitiateAuthResponse;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminResetUserPasswordRequest;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.AttributeType;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.CognitoIdentityProviderException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -44,25 +40,28 @@ public class UserService {
                     )
                     .build();
 
-            AdminCreateUserResponse response = cognitoClient.adminCreateUser(request);
-
-            // Save user to database
-            saveUserToDatabase(username, email, firstName, lastName);
+            cognitoClient.adminCreateUser(request);
+            saveUser(new UserDTO(username, email, firstName, lastName)); // userId is not used here
 
         } catch (CognitoIdentityProviderException e) {
             throw new RuntimeException("Failed to sign up user: " + e.getMessage(), e);
         }
     }
 
-    private void saveUserToDatabase(String username, String email, String firstName, String lastName) {
-        String sql = "INSERT INTO users (username, email, FName, LName) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, username, email, firstName, lastName);
+    public void saveUser(UserDTO userDTO) {
+        String sql = "INSERT INTO users (username, email, FName, LName) VALUES (?, ?, ?, ?) " +
+                "ON DUPLICATE KEY UPDATE email = VALUES(email), FName = VALUES(FName), LName = VALUES(LName)";
+        jdbcTemplate.update(sql,
+                userDTO.getUsername(),
+                userDTO.getEmail(),
+                userDTO.getFirstName(),
+                userDTO.getLastName());
     }
 
     public AdminInitiateAuthResponse signIn(String username, String password) {
         try {
             AdminInitiateAuthRequest request = AdminInitiateAuthRequest.builder()
-                    .authFlow("ADMIN_NO_SRP_AUTH")
+                    .authFlow(AuthFlowType.ADMIN_NO_SRP_AUTH)
                     .clientId(clientId)
                     .userPoolId(userPoolId)
                     .authParameters(Map.of(
@@ -87,6 +86,97 @@ public class UserService {
             cognitoClient.adminResetUserPassword(request);
         } catch (CognitoIdentityProviderException e) {
             throw new RuntimeException("Failed to reset password: " + e.getMessage(), e);
+        }
+    }
+
+    public UserDTO getUserByUsername(String username) {
+        String sql = "SELECT * FROM users WHERE username = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{username}, (rs, rowNum) ->
+                new UserDTO(
+                        rs.getString("username"),
+                        rs.getString("email"),
+                        rs.getString("FName"),
+                        rs.getString("LName")
+                )
+        );
+    }
+
+    public List<UserDTO> fetchUsers() {
+        try {
+            ListUsersRequest request = ListUsersRequest.builder()
+                    .userPoolId(userPoolId)
+                    .build();
+
+            ListUsersResponse response = cognitoClient.listUsers(request);
+            return response.users().stream().map(this::mapToUserDTO).collect(Collectors.toList());
+        } catch (CognitoIdentityProviderException e) {
+            throw new RuntimeException("Failed to fetch users: " + e.getMessage(), e);
+        }
+    }
+
+    public UserDTO mapToUserDTO(UserType userType) {
+        String username = userType.username();
+        String email = userType.attributes().stream()
+                .filter(attr -> "email".equals(attr.name()))
+                .map(AttributeType::value)
+                .findFirst()
+                .orElse("Not Provided");
+        String firstName = userType.attributes().stream()
+                .filter(attr -> "given_name".equals(attr.name()))
+                .map(AttributeType::value)
+                .findFirst()
+                .orElse("Not Provided");
+        String lastName = userType.attributes().stream()
+                .filter(attr -> "family_name".equals(attr.name()))
+                .map(AttributeType::value)
+                .findFirst()
+                .orElse("Not Provided");
+
+        return new UserDTO(username, email, firstName, lastName);
+    }
+
+    public void fetchAndPrintUserAttributes(String username) {
+        try {
+            AdminGetUserRequest request = AdminGetUserRequest.builder()
+                    .userPoolId(userPoolId)
+                    .username(username)
+                    .build();
+
+            AdminGetUserResponse response = cognitoClient.adminGetUser(request);
+
+            System.out.println("Attributes for user: " + username);
+            response.userAttributes().forEach(attr ->
+                    System.out.println("Name: " + attr.name() + ", Value: " + attr.value()));
+
+        } catch (CognitoIdentityProviderException e) {
+            System.err.println("Failed to get user details for username " + username + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void syncUsers() {
+        List<UserDTO> users = fetchUsers();
+        updateOrInsertUsersInDatabase(users);
+    }
+
+    private void updateOrInsertUsersInDatabase(List<UserDTO> users) {
+        String sql = "INSERT INTO users (username, email, FName, LName) VALUES (?, ?, ?, ?) " +
+                "ON DUPLICATE KEY UPDATE email = VALUES(email), FName = VALUES(FName), LName = VALUES(LName)";
+
+        for (UserDTO user : users) {
+            jdbcTemplate.update(sql, user.getUsername(), user.getEmail(), user.getFirstName(), user.getLastName());
+        }
+    }
+
+    public GetUserResponse getUserDetails(String accessToken) {
+        try {
+            GetUserRequest request = GetUserRequest.builder()
+                    .accessToken(accessToken)
+                    .build();
+
+            return cognitoClient.getUser(request);
+        } catch (CognitoIdentityProviderException e) {
+            throw new RuntimeException("Failed to fetch user details: " + e.getMessage(), e);
         }
     }
 }
