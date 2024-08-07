@@ -1,6 +1,7 @@
 package com.keyin.Users;
 
 import jakarta.persistence.*;
+import java.util.Map;
 
 @Entity
 public class User {
@@ -9,37 +10,40 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int user_id;
     private String username;
-    private String password;
     private String email;
     private String FName;
     private String LName;
 
-    public User(){
-
+    // Default constructor for JPA
+    public User() {
     }
-    public User(int user_id, String username, String email, String fname, String lname) {
 
+    // Constructor with all fields
+    public User(int user_id, String username, String email, String FName, String LName) {
         this.user_id = user_id;
         this.username = username;
-        this.password = password;
         this.email = email;
         this.FName = FName;
         this.LName = LName;
     }
 
-    public User(String username, String password, String email, String FName, String LName) {
+    // Constructor without user_id (useful for creating new users before saving)
+    public User(String username, String email, String FName, String LName) {
         this.username = username;
-        this.password = password;
         this.email = email;
         this.FName = FName;
         this.LName = LName;
     }
 
-    public User(String username, String email) {
+    // Constructor with attributes map
+    public User(String username, Map<String, String> attributes) {
         this.username = username;
-        this.email = email;
+        this.email = attributes.get("email");
+        this.FName = attributes.get("FName");
+        this.LName = attributes.get("LName");
     }
 
+    // Getters and Setters
     public int getUserId() {
         return user_id;
     }
@@ -54,14 +58,6 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getEmail() {
