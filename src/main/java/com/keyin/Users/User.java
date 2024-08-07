@@ -1,7 +1,6 @@
 package com.keyin.Users;
 
 import jakarta.persistence.*;
-
 import java.util.Map;
 
 @Entity
@@ -15,17 +14,20 @@ public class User {
     private String FName;
     private String LName;
 
-    public User(String username, Map<String, String> attributes) {
+    // Default constructor for JPA
+    public User() {
     }
 
-    public User(int user_id, String username, String email, String fname, String lname) {
+    // Constructor with all fields
+    public User(int user_id, String username, String email, String FName, String LName) {
         this.user_id = user_id;
         this.username = username;
         this.email = email;
-        this.FName = fname;
-        this.LName = lname;
+        this.FName = FName;
+        this.LName = LName;
     }
 
+    // Constructor without user_id (useful for creating new users before saving)
     public User(String username, String email, String FName, String LName) {
         this.username = username;
         this.email = email;
@@ -33,15 +35,15 @@ public class User {
         this.LName = LName;
     }
 
-    public User(String username, String email) {
+    // Constructor with attributes map
+    public User(String username, Map<String, String> attributes) {
         this.username = username;
-        this.email = email;
+        this.email = attributes.get("email");
+        this.FName = attributes.get("FName");
+        this.LName = attributes.get("LName");
     }
 
-    public User(String userId, String username, Map<String, String> attributes) {
-        // This constructor seems to be incomplete. Ensure to handle attributes if needed.
-    }
-
+    // Getters and Setters
     public int getUserId() {
         return user_id;
     }

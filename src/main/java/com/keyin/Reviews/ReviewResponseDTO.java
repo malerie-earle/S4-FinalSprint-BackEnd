@@ -2,10 +2,10 @@ package com.keyin.Reviews;
 
 public class ReviewResponseDTO {
 
-    private String fName;
-    private String lName;
     private String rating;
     private String text;
+    private String fName;
+    private String lName;
 
     public String getFName() {
         return fName;

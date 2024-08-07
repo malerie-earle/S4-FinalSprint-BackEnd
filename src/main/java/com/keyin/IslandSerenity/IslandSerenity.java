@@ -1,5 +1,6 @@
 package com.keyin.IslandSerenity;
 
+import com.keyin.Reviews.Review;
 import com.keyin.Users.UserDTO;
 import com.keyin.Users.User;
 import com.keyin.Users.UserRepository;
@@ -41,16 +42,15 @@ public class IslandSerenity {
             // Initialize Users
             if (userRepository.count() == 0) {
                 try {
-                    List<UserDTO> cognitoUsers = userService.fetchUsers();
+                    List<UserDTO> cognitoUsers = userService.fetchUsersFromCognito();
                     List<User> users = cognitoUsers.stream()
-                            .map(dto -> new User(dto.getUsername(), dto.getAttributes()))
+                            .map(dto -> new User(dto.getUsername(), dto.getEmail(), dto.getFirstName(), dto.getLastName()))
                             .collect(Collectors.toList());
                     userRepository.saveAll(users);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-
 
                     // Initialize Rooms
             if (roomRepository.count() == 0) {
@@ -86,7 +86,17 @@ public class IslandSerenity {
                 activityRepository.save(new Activity("Tropical Spa Retreat", "Escape to a world of tranquility with our Tropical Spa Retreat. This luxurious sanctuary offers a serene blend of natural beauty and sophisticated comfort, designed to rejuvenate both body and mind. Nestled in a lush tropical setting, the retreat features spacious accommodations with elegant furnishings and panoramic views of verdant landscapes. Enjoy indulgent spa treatments in your private oasis, complete with a dedicated spa room and an outdoor relaxation area. Immerse yourself in a personalized wellness experience with exclusive access to our top-tier spa facilities, including a serene garden and rejuvenating wellness programs.", 10, "11:00 AM", "https://media.istockphoto.com/id/470330582/photo/beautiful-young-woman-at-spa-outdoor.jpg?s=612x612&w=0&k=20&c=fO80Rm0HO1TXi6-Xn7XK5NoK00nIDUv_yDGILs2ha7c=", "https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_1200,h_630/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/xdpqtxytsdlyctjzlrx9/Mud%20Bath%20at%20Galina%20Hotel%20and%20Spa%20.jpg", "https://www.prensalibre.com/wp-content/uploads/2019/09/shutterstock_125874761.jpg?quality=52&w=760&h=430&crop=1"));
             }
             // Initialize Reviews
-            // Add review initialization as needed
+            if (reviewRepository.count() == 0) {
+                reviewRepository.save(new Review("The snorkeling excursion was truly a highlight of our stay. The crystal-clear waters and vibrant coral reefs were mesmerizing. The guided tour was well-organized, and the safety instructions were clear, making it a fantastic experience for both beginners and experienced snorkelers. Swimming alongside tropical fish and discovering hidden coves was unforgettable.", 5, "Meghan Ashley"));
+                reviewRepository.save(new Review("The Sea Cave Exploration was exhilarating! Paddling through the sea caves was a unique experience, and the rock formations were stunning. The guides were knowledgeable and made sure we were safe while exploring the hidden passages. It’s a must-do for anyone who loves adventure and nature.", 5, "Justin McDonald"));
+                reviewRepository.save(new Review("The waterfall excursion was enjoyable, but the trek to get there was longer and more strenuous than anticipated. The waterfall was beautiful, but it can get crowded, which might take away from the tranquil experience. Swimming in the clear pools and relaxing under the waterfall was incredibly refreshing.", 4, "Jasmine Gatineau"));
+                reviewRepository.save(new Review("The local market adventure was fantastic! The bustling markets were full of vibrant colors and unique finds. Engaging with local artisans and sampling regional delicacies added a wonderful cultural touch to our trip. A great way to experience local life and pick up some souvenirs.", 5, "Jamie Malibu"));
+                reviewRepository.save(new Review("The rooms at this resort are nothing short of spectacular. Each suite is a private sanctuary, featuring luxurious furnishings and breathtaking views of the surrounding landscapes. The design is both elegant and functional, ensuring that every detail enhances the guest experience. The daily housekeeping service is thorough, maintaining high standards of cleanliness and ensuring that everything is in perfect order.", 5, "Oliver Midas"));
+                reviewRepository.save(new Review("Our stay at the resort was nothing short of magical. From the moment we arrived, we were enveloped in an atmosphere of luxury and relaxation. The resort’s design seamlessly integrates with the stunning natural surroundings, creating a tranquil and visually captivating environment. The staff were exceptional, always attentive and eager to ensure our comfort. The resort’s emphasis on both elegance and relaxation is evident in every detail, from the beautifully landscaped gardens to the well-maintained facilities. Each day felt like a personal retreat, whether we were lounging by our private pool, enjoying a gourmet meal, or indulging in the spa services. It’s the perfect destination for those seeking a blend of sophistication and serenity in a tropical paradise.", 5, "Jennifer Williams"));
+                reviewRepository.save(new Review("The Tropical Spa Retreat at this resort is an experience of pure bliss. Nestled in a lush, serene environment, the spa offers a sanctuary where you can truly unwind and rejuvenate. The spa treatments are indulgent and expertly delivered, with a range of options that cater to every need, from relaxing massages to invigorating facials. The private spa room and outdoor relaxation area provide a tranquil setting that enhances the overall experience. The attention to detail in the spa’s design, combined with the top-notch service from the therapists, makes it an exceptional highlight of the resort. Whether you’re looking to pamper yourself or simply escape from everyday stress, the Tropical Spa Retreat is a must-visit.", 5, "Betty White"));
+                reviewRepository.save(new Review("The sunset cruise was a standout highlight of our stay. As the sun dipped below the horizon, the views were absolutely breathtaking, painting the sky with vibrant colors that reflected off the ocean’s surface. The cruise itself was elegantly designed, offering comfortable seating and a relaxed atmosphere. The crew provided excellent service, ensuring that we had everything we needed while we enjoyed the stunning scenery.", 5, "Christopher Duff"));
+                reviewRepository.save(new Review("The variety and quality of activities at the resort were impressive and greatly enhanced our stay. From the thrilling snorkeling safari to the serene beach yoga sessions, each experience was thoughtfully curated and executed. The snorkeling tour offered an incredible opportunity to explore vibrant marine life, and the sea cave exploration provided a unique adventure that was both exciting and educational. The service throughout our stay was consistently high, with friendly and knowledgeable staff who were always ready to assist and ensure our enjoyment.", 4, "Ellen Saffron"));
+            }
         };
     }
 };

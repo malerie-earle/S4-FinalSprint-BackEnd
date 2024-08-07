@@ -1,5 +1,5 @@
 package com.keyin.Reviews;
-import com.keyin.Users.User;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -9,14 +9,24 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long review_id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    private String rating;
     @Lob
     @Column(columnDefinition = "LONGTEXT")
     private String text;
+
+    private int rating;
+
+    @Column(name = "user_name", nullable = false)
+    private String user_name;
+
+    public Review() {
+        // Default constructor for JPA
+    }
+
+    public Review(String text, int rating, String user_name) {
+        this.text = text;
+        this.rating = rating;
+        this.user_name = user_name;
+    }
 
     public Long getReviewId() {
         return review_id;
@@ -26,19 +36,19 @@ public class Review {
         this.review_id = review_id;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserName() {
+        return user_name;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserName(String user_name) {
+        this.user_name = user_name;
     }
 
-    public String getRating() {
+    public int getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(int rating) {
         this.rating = rating;
     }
 
