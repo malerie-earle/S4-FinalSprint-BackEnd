@@ -7,10 +7,11 @@ public class AvailableRoomRequest{
     private Date endDate;
     private int occupancy;
     private String type;
+    private String view;
     public AvailableRoomRequest(){
     }
 
-    public AvailableRoomRequest(Date startDate, Date endDate, int occupancy, String type){
+    public AvailableRoomRequest(Date startDate, Date endDate, int occupancy, String type, String view){
         this.startDate = startDate;
         this.endDate = endDate;
         this.occupancy = occupancy;
@@ -47,5 +48,13 @@ public class AvailableRoomRequest{
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getView() {
+        return view;
+    }
+
+    public void setView(String view) {
+        this.view = view;
     }
 }

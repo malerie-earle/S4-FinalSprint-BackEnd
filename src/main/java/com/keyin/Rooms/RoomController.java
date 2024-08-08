@@ -23,15 +23,16 @@ public class RoomController {
         return roomService.getRoomByID(id);
     }
 
+    /*
     @PostMapping("/api/rooms/available")
     public List<Room> getAvailableRooms(@RequestParam(value = "start") Date startDate, @RequestParam(value = "end") Date endDate, @RequestParam(value = "occupancy") int occupancy, @RequestParam(value = "type") String type, @RequestParam(value = "view") String view){
         return roomService.getRoomsFilteredBySearch(startDate,endDate,occupancy, type, view);
     }
+    */
 
-    /*
     @PostMapping("/api/rooms/available")
     public List<Room> getAvaliableRooms(@RequestBody AvailableRoomRequest request){
         return(roomService.getRoomsFilteredBySearch(request.getStartDate(),request.getEndDate(),request.getOccupancy(),request.getType(),request.getView()));
     }
-     */
+
 }
