@@ -3,16 +3,16 @@ import java.time.LocalDate;
 
 public class Activity_BookingEntryDTO {
 
-        private Long user_id;
+        private String userName;
         private Long activity_id;
         private LocalDate date;
 
-        public Long getUserId() {
-                return user_id;
+        public String getUserName() {
+                return userName;
         }
 
-        public void setUserId(Long user_id) {
-                this.user_id = user_id;
+        public void setUserName(String userName) {
+                this.userName = userName;
         }
 
         public Long getActivityId() {

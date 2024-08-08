@@ -1,10 +1,14 @@
 package com.keyin.Activity_Booking;
 import com.keyin.Activities.Activity;
+import com.keyin.Users.User;
+import com.keyin.Users.UserRepository;
+import com.keyin.Users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -16,13 +20,26 @@ public class Activity_BookingController {
     private Activity_BookingRepository activityBookingRepository;
     @Autowired
     private Activity_BookingService activityBookingService;
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("/activities/book")
     public Activity_Booking createActivityBooking(@RequestBody Activity_BookingEntryDTO request){
-        Long user_id = request.getUserId();
-        Long activity_id = request.getActivityId();
-        LocalDate date = request.getDate();
-        return activityBookingService.createActivityBooking(user_id, activity_id, date);
+
+        String userName = request.getUserName();
+        List<User> users = userRepository.findAllByUsername(userName);
+        System.out.println(request.getUserName());
+        System.out.println(users);
+
+        System.out.println(users.get(0));
+        System.out.println(users.get(0).getUserId());
+
+        if(!users.isEmpty()){
+            Long activity_id = request.getActivityId();
+            LocalDate date = request.getDate();
+            return activityBookingService.createActivityBooking(users.get(0).getUserId(), activity_id, date);
+        }
+        return null;
     }
 
     @GetMapping("/activities/bookings/{activity_booking_id}")
