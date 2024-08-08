@@ -28,11 +28,6 @@ public class Activity_BookingController {
 
         String userName = request.getUserName();
         List<User> users = userRepository.findAllByUsername(userName);
-        System.out.println(request.getUserName());
-        System.out.println(users);
-
-        System.out.println(users.get(0));
-        System.out.println(users.get(0).getUserId());
 
         if(!users.isEmpty()){
             Long activity_id = request.getActivityId();

@@ -1,10 +1,13 @@
 package com.keyin.Room_Booking;
 
 import com.keyin.Room_Booking.Room_BookingDTObjects.BookingRequest;
+import com.keyin.Users.User;
+import com.keyin.Users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +16,8 @@ import java.util.List;
 public class Room_BookingController {
     @Autowired
     private Room_BookingService room_bookingService;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("api/rooms/bookings")
     public List<Room_Booking> getAllRoomBookings(){
@@ -51,7 +56,14 @@ public class Room_BookingController {
      */
 
     @PostMapping("api/rooms/book")
-    public Room_Booking bookRoom(@RequestBody BookingRequest bookingRequest){
-        return room_bookingService.createRoom_Booking(bookingRequest.getUser_id(),bookingRequest.getRoom_id(),bookingRequest.getStart(),bookingRequest.getEnd());
+    public Room_Booking bookRoom(@RequestBody BookingRequest bookingRequest) {
+
+        String userName = bookingRequest.getUsername();
+        List<User> users = userRepository.findAllByUsername(userName);
+
+        if (!users.isEmpty()) {
+            return room_bookingService.createRoom_Booking(users.get(0).getUserId(), bookingRequest.getRoom_id(), bookingRequest.getStart(), bookingRequest.getEnd());
+        }
+        return null;
     }
 }
