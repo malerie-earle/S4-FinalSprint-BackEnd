@@ -8,7 +8,8 @@ import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminInitia
 import software.amazon.awssdk.services.cognitoidentityprovider.model.CognitoIdentityProviderException;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     private final UserService userService;
@@ -18,7 +19,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/user-details")
+    @GetMapping("/api/users/{user_id}")
     public ResponseEntity<UserDTO> getUserDetails(@RequestHeader("Authorization") String authHeader) {
         try {
             String accessToken = authHeader.replace("Bearer ", "");
@@ -29,7 +30,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/api/users/{username}")
     public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
         try {
             UserDTO user = userService.getUserByUsername(username);
