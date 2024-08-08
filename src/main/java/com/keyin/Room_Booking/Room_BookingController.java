@@ -1,5 +1,6 @@
 package com.keyin.Room_Booking;
 
+import com.keyin.Room_Booking.Room_BookingDTObjects.BookingRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,8 @@ public class Room_BookingController {
     public List<Room_Booking> getRoom_BookingsByRoomId(@PathVariable Long id){
         return room_bookingService.getRoom_BookingByRoomId(id);
     }
+
+    /*
     @PostMapping("api/rooms/book")
     public Room_Booking bookRoom(@RequestParam(value = "user_id") Long userid, @RequestParam(value = "room_id") Long roomid, @RequestParam(value = "start") String start, @RequestParam(value = "end") String end){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
@@ -44,5 +47,11 @@ public class Room_BookingController {
             return null;
         }
         return room_bookingService.createRoom_Booking(userid,roomid,startD,endD);
+    }
+     */
+
+    @PostMapping("api/rooms/book")
+    public Room_Booking bookRoom(@RequestBody BookingRequest bookingRequest){
+        return room_bookingService.createRoom_Booking(bookingRequest.getUser_id(),bookingRequest.getRoom_id(),bookingRequest.getStart(),bookingRequest.getEnd());
     }
 }
