@@ -6,7 +6,7 @@ import com.keyin.Users.User;
 import com.keyin.Users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -84,4 +84,88 @@ public class Room_BookingService {
         }
         return null;
     }
+
+    public List<Room> getAvailableRoomsByDateRange(Date startDate, Date endDate) {
+        List<Room> allRooms = roomRepository.findAll();
+        List<Room_Booking> conflictingBookings = getConflictingRoomBookings(startDate, endDate);
+        List<Long> conflictingRoomIds = new ArrayList<>();
+
+        for (Room_Booking booking : conflictingBookings) {
+            Long room_id = booking.getRoom().getRoom_id();
+            if (!conflictingRoomIds.contains(room_id)) {
+                conflictingRoomIds.add(room_id);
+            }
+        }
+        List<Room> availableRooms = new ArrayList<>();
+        for (Room room : allRooms) {
+            if (!conflictingRoomIds.contains(room.getRoom_id())) {
+                availableRooms.add(room);
+            }
+        }
+        return availableRooms;
+    }
+
+    public List<Room> getAvailableRoomsByDateRangeAndOccupancy(Date startDate, Date endDate, int requestedOccupancy) {
+        List<Room> allRooms = roomRepository.findAll();
+        List<Room_Booking> conflictingBookings = getConflictingRoomBookings(startDate, endDate);
+        List<Long> conflictingRoomIds = new ArrayList<>();
+
+        for (Room_Booking booking : conflictingBookings) {
+            Long room_id = booking.getRoom().getRoom_id();
+            if (!conflictingRoomIds.contains(room_id)) {
+                conflictingRoomIds.add(room_id);
+            }
+        }
+        List<Room> availableRooms = new ArrayList<>();
+        for (Room room : allRooms) {
+            if (!conflictingRoomIds.contains(room.getRoom_id()) && room.getOccupancy() >= requestedOccupancy) {
+                availableRooms.add(room);
+            }
+        }
+        return availableRooms;
+    }
+
+    public List<Room> getAvailableRoomsByDateRangeAndType(Date startDate, Date endDate, String roomType) {
+        List<Room> allRooms = roomRepository.findAll();
+        List<Room_Booking> conflictingBookings = getConflictingRoomBookings(startDate, endDate);
+        List<Long> conflictingRoomIds = new ArrayList<>();
+
+        for (Room_Booking booking : conflictingBookings) {
+            Long room_id = booking.getRoom().getRoom_id();
+            if (!conflictingRoomIds.contains(room_id)) {
+                conflictingRoomIds.add(room_id);
+            }
+        }
+        List<Room> availableRooms = new ArrayList<>();
+       for (Room room : allRooms) {
+            if (!conflictingRoomIds.contains(room.getRoom_id()) && room.getType().equalsIgnoreCase(roomType)) {
+                availableRooms.add(room);
+            }
+       }
+        return availableRooms;
+    }
+
+
+    public List<Room> getAvailableRoomsByDateRangeOccupancyAndType(Date startDate, Date endDate, int requestedOccupancy, String roomType){
+        List<Room> allRooms = roomRepository.findAll();
+        List<Room_Booking> conflictingBookings = getConflictingRoomBookings(startDate, endDate);
+        List<Long> conflictingRoomIds = new ArrayList<>();
+
+        for (Room_Booking booking : conflictingBookings) {
+            Long room_id = booking.getRoom().getRoom_id();
+            if (!conflictingRoomIds.contains(room_id)) {
+                conflictingRoomIds.add(room_id);
+            }
+        }
+        List<Room> availableRooms = new ArrayList<>();
+        for (Room room : allRooms) {
+            if (!conflictingRoomIds.contains(room.getRoom_id()) && room.getOccupancy() >= requestedOccupancy
+                    && room.getType().equalsIgnoreCase(roomType)) {
+                availableRooms.add(room);
+            }
+        }
+        return availableRooms;
+    }
 }
+
+
