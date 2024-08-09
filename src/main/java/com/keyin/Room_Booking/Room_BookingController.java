@@ -1,6 +1,7 @@
 package com.keyin.Room_Booking;
 
 import com.keyin.Activities.Activity;
+import com.keyin.Activity_Booking.Activity_Booking;
 import com.keyin.Room_Booking.Room_BookingDTObjects.BookingRequest;
 import com.keyin.Rooms.Room;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,11 @@ public class Room_BookingController {
     public List<Room_Booking> getRoom_BookingsByUserId(@PathVariable Long id){
         return room_bookingService.getRoom_BookingByUserId(id);
     }
+
+//    @GetMapping("api/rooms/bookings/username/{username}")
+//    public List<Room_Booking> getRoomBookingsByUsername(@PathVariable String username){
+//        return room_bookingService.getRoomBookingsByUsername(username);
+//    }
 
     @GetMapping("api/rooms/bookings/room/{id}")
     public List<Room_Booking> getRoom_BookingsByRoomId(@PathVariable Long id){

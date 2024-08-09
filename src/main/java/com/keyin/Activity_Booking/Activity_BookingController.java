@@ -35,6 +35,11 @@ public class Activity_BookingController {
         return activityBookingService.getActivityBookingsByUserId(user_id);
     }
 
+//    @GetMapping("/activities/bookings/username/{username}")
+//    public List<Activity_Booking> getActivityBookingsByUsername(@PathVariable String username){
+//        return activityBookingService.getActivityBookingsByUsername(username);
+//    }
+
     @GetMapping("/activities/bookings/activity/{activity_id}")
     public List<Activity_Booking> getActivityBookingsByActivityId(@PathVariable Long activity_id){
         return activityBookingService.getActivityBookingsByActivityId(activity_id);
