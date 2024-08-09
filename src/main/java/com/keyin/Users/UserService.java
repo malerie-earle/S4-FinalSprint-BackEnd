@@ -72,7 +72,6 @@ public class UserService {
         return new UserDTO(username, email, firstName, lastName);
     }
 
-    // Sign up a new user
     public void signUp(String username, String password, String email, String firstName, String lastName) {
         try {
             System.out.println("Signing up user with attributes:");
@@ -93,12 +92,52 @@ public class UserService {
                     .build();
 
             cognitoClient.adminCreateUser(request);
-            saveUser(new UserDTO(username, email, firstName, lastName)); // Save user to your local DB
+
+            // Fetch user from Cognito
+            UserDTO userDTO = fetchUserFromCognitoByUsername(username);
+
+            // Save user to database
+            saveUser(userDTO);
 
         } catch (CognitoIdentityProviderException e) {
             throw new RuntimeException("Failed to sign up user: " + e.getMessage(), e);
         }
     }
+
+    private UserDTO fetchUserFromCognitoByUsername(String username) {
+        try {
+            AdminGetUserRequest request = AdminGetUserRequest.builder()
+                    .userPoolId(userPoolId)
+                    .username(username)
+                    .build();
+
+            AdminGetUserResponse response = cognitoClient.adminGetUser(request);
+
+            // Map Cognito response to UserDTO
+            return new UserDTO(
+                    response.username(),
+                    response.userAttributes().stream()
+                            .filter(attr -> "email".equals(attr.name()))
+                            .map(AttributeType::value)
+                            .findFirst()
+                            .orElse("Not Provided"),
+                    response.userAttributes().stream()
+                            .filter(attr -> "given_name".equals(attr.name()))
+                            .map(AttributeType::value)
+                            .findFirst()
+                            .orElse("Not Provided"),
+                    response.userAttributes().stream()
+                            .filter(attr -> "family_name".equals(attr.name()))
+                            .map(AttributeType::value)
+                            .findFirst()
+                            .orElse("Not Provided")
+            );
+        } catch (CognitoIdentityProviderException e) {
+            throw new RuntimeException("Failed to fetch user from Cognito: " + e.getMessage(), e);
+        }
+    }
+
+
 
     public AdminInitiateAuthResponse signIn(String username, String password) {
         try {
@@ -172,6 +211,7 @@ public class UserService {
         return (List<User>) userRepository.findAll();
     }
 
+    // Fetch user by username from the database
     public UserDTO getUserByUsername(String username) {
         String sql = "SELECT * FROM user WHERE username = ?";
         return jdbcTemplate.queryForObject(
@@ -206,6 +246,7 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    // RowMapper implementation to map ResultSet to UserDTO
     private static class UserDTORowMapper implements RowMapper<UserDTO> {
         @Override
         public UserDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
