@@ -1,5 +1,6 @@
 package com.keyin.Users;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,9 +16,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
 @Service
 public class UserService {
 
+    // Cognito Functions
     private final CognitoIdentityProviderClient cognitoClient;
     private final JdbcTemplate jdbcTemplate;
 
@@ -26,6 +29,7 @@ public class UserService {
 
     @Value("${aws.cognito.clientId}")
     private String clientId;
+    private int user_id;
 
     public UserService(CognitoIdentityProviderClient cognitoClient, JdbcTemplate jdbcTemplate) {
         this.cognitoClient = cognitoClient;
@@ -68,13 +72,6 @@ public class UserService {
         return new UserDTO(username, email, firstName, lastName);
     }
 
-    // Fetch users from database
-    public List<UserDTO> fetchUsersFromDatabase() {
-        String sql = "SELECT * FROM users";
-        return jdbcTemplate.query(sql, new UserDTORowMapper());
-    }
-
-    // Sign up a new user
     public void signUp(String username, String password, String email, String firstName, String lastName) {
         try {
             System.out.println("Signing up user with attributes:");
@@ -95,22 +92,52 @@ public class UserService {
                     .build();
 
             cognitoClient.adminCreateUser(request);
-            saveUser(new UserDTO(username, email, firstName, lastName)); // Save user to your local DB
+
+            // Fetch user from Cognito
+            UserDTO userDTO = fetchUserFromCognitoByUsername(username);
+
+            // Save user to database
+            saveUser(userDTO);
 
         } catch (CognitoIdentityProviderException e) {
             throw new RuntimeException("Failed to sign up user: " + e.getMessage(), e);
         }
     }
 
-    public void saveUser(UserDTO userDTO) {
-        String sql = "INSERT INTO users (username, email, FName, LName) VALUES (?, ?, ?, ?) " +
-                "ON DUPLICATE KEY UPDATE email = VALUES(email), FName = VALUES(FName), LName = VALUES(LName)";
-        jdbcTemplate.update(sql,
-                userDTO.getUsername(),
-                userDTO.getEmail(),
-                userDTO.getFirstName(),
-                userDTO.getLastName());
+    private UserDTO fetchUserFromCognitoByUsername(String username) {
+        try {
+            AdminGetUserRequest request = AdminGetUserRequest.builder()
+                    .userPoolId(userPoolId)
+                    .username(username)
+                    .build();
+
+            AdminGetUserResponse response = cognitoClient.adminGetUser(request);
+
+            // Map Cognito response to UserDTO
+            return new UserDTO(
+                    response.username(),
+                    response.userAttributes().stream()
+                            .filter(attr -> "email".equals(attr.name()))
+                            .map(AttributeType::value)
+                            .findFirst()
+                            .orElse("Not Provided"),
+                    response.userAttributes().stream()
+                            .filter(attr -> "given_name".equals(attr.name()))
+                            .map(AttributeType::value)
+                            .findFirst()
+                            .orElse("Not Provided"),
+                    response.userAttributes().stream()
+                            .filter(attr -> "family_name".equals(attr.name()))
+                            .map(AttributeType::value)
+                            .findFirst()
+                            .orElse("Not Provided")
+            );
+        } catch (CognitoIdentityProviderException e) {
+            throw new RuntimeException("Failed to fetch user from Cognito: " + e.getMessage(), e);
+        }
     }
+
+
 
     public AdminInitiateAuthResponse signIn(String username, String password) {
         try {
@@ -142,16 +169,6 @@ public class UserService {
             throw new RuntimeException("Failed to reset password: " + e.getMessage(), e);
         }
     }
-
-    public UserDTO getUserByUsername(String username) {
-        String sql = "SELECT * FROM users WHERE username = ?";
-        return jdbcTemplate.queryForObject(
-                sql,
-                new Object[]{username},
-                new UserDTORowMapper()
-        );
-    }
-
     public void fetchAndPrintUserAttributes(String username) {
         try {
             AdminGetUserRequest request = AdminGetUserRequest.builder()
@@ -178,6 +195,32 @@ public class UserService {
         }
     }
 
+
+    // Database Functions
+    @Autowired
+    private UserRepository userRepository;
+
+    // Fetch users from database
+    public List<UserDTO> fetchUsersFromDatabase() {
+        String sql = "SELECT * FROM user";
+        return jdbcTemplate.query(sql, new UserDTORowMapper());
+    }
+
+    // Get all users from database
+    public List<User> getAllUsers() {
+        return (List<User>) userRepository.findAll();
+    }
+
+    // Fetch user by username from the database
+    public UserDTO getUserByUsername(String username) {
+        String sql = "SELECT * FROM user WHERE username = ?";
+        return jdbcTemplate.queryForObject(
+                sql,
+                new Object[]{username},
+                new UserDTORowMapper()
+        );
+    }
+
     public UserDTO getUserDetails() {
         // Get the currently authenticated user's username
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -187,7 +230,23 @@ public class UserService {
         return getUserByUsername(username); // Ensure this returns UserDTO
     }
 
+    public void saveUser(UserDTO userDTO) {
+        String sql = "INSERT INTO user (username, email, FName, LName) VALUES (?, ?, ?, ?) " +
+                "ON DUPLICATE KEY UPDATE email = VALUES(email), FName = VALUES(FName), LName = VALUES(LName)";
+        jdbcTemplate.update(sql,
+                userDTO.getUsername(),
+                userDTO.getEmail(),
+                userDTO.getFirstName(),
+                userDTO.getLastName());
+    }
 
+    public UserDTO getUserById(long user_id) {
+        return userRepository.findById(user_id)
+                .map(user -> new UserDTO(user.getUsername(), user.getEmail(), user.getFName(), user.getLName()))
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    // RowMapper implementation to map ResultSet to UserDTO
     private static class UserDTORowMapper implements RowMapper<UserDTO> {
         @Override
         public UserDTO mapRow(ResultSet rs, int rowNum) throws SQLException {

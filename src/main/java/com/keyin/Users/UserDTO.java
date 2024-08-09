@@ -59,4 +59,15 @@ public class UserDTO {
         attributes.put("lastName", lastName);
         return attributes;
     }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
+    }
 }
+
