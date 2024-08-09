@@ -8,7 +8,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int user_id;
+    private long user_id;
     private String username;
     private String email;
     private String FName;
@@ -19,7 +19,7 @@ public class User {
     }
 
     // Constructor with all fields
-    public User(int user_id, String username, String email, String FName, String LName) {
+    public User(long user_id, String username, String email, String FName, String LName) {
         this.user_id = user_id;
         this.username = username;
         this.email = email;
@@ -44,11 +44,11 @@ public class User {
     }
 
     // Getters and Setters
-    public int getUserId() {
+    public long getUserId() {
         return user_id;
     }
 
-    public void setUserId(int user_id) {
+    public void setUserId(long user_id) {
         this.user_id = user_id;
     }
 

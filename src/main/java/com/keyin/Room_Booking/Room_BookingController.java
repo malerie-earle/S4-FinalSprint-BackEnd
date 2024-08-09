@@ -3,7 +3,11 @@ package com.keyin.Room_Booking;
 import com.keyin.Activities.Activity;
 import com.keyin.Activity_Booking.Activity_Booking;
 import com.keyin.Room_Booking.Room_BookingDTObjects.BookingRequest;
+
+import com.keyin.Users.User;
+import com.keyin.Users.UserRepository;
 import com.keyin.Rooms.Room;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +22,8 @@ import java.util.List;
 public class Room_BookingController {
     @Autowired
     private Room_BookingService room_bookingService;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("api/rooms/bookings")
     public List<Room_Booking> getAllRoomBookings(){
@@ -61,8 +67,15 @@ public class Room_BookingController {
      */
 
     @PostMapping("api/rooms/book")
-    public Room_Booking bookRoom(@RequestBody BookingRequest bookingRequest){
-        return room_bookingService.createRoom_Booking(bookingRequest.getUser_id(),bookingRequest.getRoom_id(),bookingRequest.getStart(),bookingRequest.getEnd());
+    public Room_Booking bookRoom(@RequestBody BookingRequest bookingRequest) {
+
+        String userName = bookingRequest.getUsername();
+        List<User> users = userRepository.findAllByUsername(userName);
+
+        if (!users.isEmpty()) {
+            return room_bookingService.createRoom_Booking(users.get(0).getUserId(), bookingRequest.getRoom_id(), bookingRequest.getStart(), bookingRequest.getEnd());
+        }
+        return null;
     }
 
     @GetMapping("api/rooms/availability")
