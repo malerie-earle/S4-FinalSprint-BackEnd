@@ -3,7 +3,7 @@ package com.keyin.Room_Booking.Room_BookingDTObjects;
 import java.util.Date;
 
 public class BookingRequest {
-    private Long user_id;
+    private String username;
     private Long room_id;
     private Date start;
     private Date end;
@@ -11,12 +11,12 @@ public class BookingRequest {
     public BookingRequest(){
     }
 
-    public Long getUser_id() {
-        return user_id;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Long getRoom_id() {
