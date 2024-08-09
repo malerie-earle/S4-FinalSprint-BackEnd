@@ -1,8 +1,10 @@
 package com.keyin.Activities;
+import com.keyin.Config.TestSecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -14,7 +16,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.Matchers.is;
 
+
 @WebMvcTest(ActivityController.class)
+@Import(TestSecurityConfig.class)
 public class ActivityControllerTest {
 
     @Autowired
@@ -69,6 +73,6 @@ public class ActivityControllerTest {
                 .andExpect(jsonPath("$.time", is(activity.getTime())));
     }
 
-    // Test that when getActivityById is called with parameter activity_id on endpoint "/api/activities/{activity_id}",
-    // it successfully returns the requested Activity Object.
+        // Test that when getActivityById is called with parameter activity_id on endpoint "/api/activities/{activity_id}",
+        // it successfully returns the requested Activity Object.
 }
