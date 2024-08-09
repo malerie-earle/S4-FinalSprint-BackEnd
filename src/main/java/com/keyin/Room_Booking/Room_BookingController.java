@@ -1,10 +1,14 @@
 package com.keyin.Room_Booking;
 
+import com.keyin.Activities.Activity;
 import com.keyin.Room_Booking.Room_BookingDTObjects.BookingRequest;
+import com.keyin.Rooms.Room;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -53,5 +57,25 @@ public class Room_BookingController {
     @PostMapping("api/rooms/book")
     public Room_Booking bookRoom(@RequestBody BookingRequest bookingRequest){
         return room_bookingService.createRoom_Booking(bookingRequest.getUser_id(),bookingRequest.getRoom_id(),bookingRequest.getStart(),bookingRequest.getEnd());
+    }
+
+    @GetMapping("api/rooms/availability")
+    public List<Room> getAvailableRoomsByDateRange(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
+        return room_bookingService.getAvailableRoomsByDateRange(startDate, endDate);
+    }
+
+    @GetMapping("api/rooms/availability/occupancy")
+    public List<Room> getAvailableRoomsByDateRangeAndOccupancy(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate, @RequestParam int requestedOccupancy) {
+        return room_bookingService.getAvailableRoomsByDateRangeAndOccupancy(startDate, endDate, requestedOccupancy);
+    }
+
+    @GetMapping("api/rooms/availability/type")
+    public List<Room> getAvailableRoomsByDateRangeAndType(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate, @RequestParam String roomType) {
+        return room_bookingService.getAvailableRoomsByDateRangeAndType(startDate, endDate, roomType);
+    }
+
+    @GetMapping("api/rooms/availability/occupancy/type")
+    public List<Room> getAvailableRoomsByDateRangeOccupancyAndType(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate, @RequestParam int requestedOccupancy, @RequestParam String roomType) {
+        return room_bookingService.getAvailableRoomsByDateRangeOccupancyAndType(startDate, endDate, requestedOccupancy, roomType);
     }
 }

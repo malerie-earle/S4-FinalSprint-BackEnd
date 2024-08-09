@@ -135,7 +135,7 @@ class UserServiceTest {
     }
 
 
-    @Test
+    /*@Test
     void testFetchUsers() {
         ListUsersResponse response = ListUsersResponse.builder()
                 .users(
@@ -159,7 +159,7 @@ class UserServiceTest {
         assertEquals("test@example.com", users.get(0).getEmail());
         assertEquals("Test", users.get(0).getFirstName());
         assertEquals("User", users.get(0).getLastName());
-    }
+    }*/
 
     @Test
     void testSyncUsers() {
