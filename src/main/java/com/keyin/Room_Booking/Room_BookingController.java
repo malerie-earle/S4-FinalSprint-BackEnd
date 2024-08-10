@@ -1,7 +1,6 @@
 package com.keyin.Room_Booking;
 
-import com.keyin.Activities.Activity;
-import com.keyin.Activity_Booking.Activity_Booking;
+
 import com.keyin.Room_Booking.Room_BookingDTObjects.BookingRequest;
 
 import com.keyin.Users.User;
@@ -11,9 +10,6 @@ import com.keyin.Rooms.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -40,14 +36,16 @@ public class Room_BookingController {
         return room_bookingService.getRoom_BookingByUserId(id);
     }
 
-//    @GetMapping("api/rooms/bookings/username/{username}")
-//    public List<Room_Booking> getRoomBookingsByUsername(@PathVariable String username){
-//        return room_bookingService.getRoomBookingsByUsername(username);
-//    }
-
     @GetMapping("api/rooms/bookings/room/{id}")
     public List<Room_Booking> getRoom_BookingsByRoomId(@PathVariable Long id){
         return room_bookingService.getRoom_BookingByRoomId(id);
+    }
+
+    @GetMapping("api/rooms/bookings/username")
+    public List<Room_Booking> getRoomBookingsByUsername(@RequestParam String username) {
+        User user = userRepository.findByUsername(username);
+        long userId = user.getUserId();
+        return room_bookingService.getRoom_BookingByUserId(userId);
     }
 
     /*
@@ -77,6 +75,7 @@ public class Room_BookingController {
         }
         return null;
     }
+
 
     @GetMapping("api/rooms/availability")
     public List<Room> getAvailableRoomsByDateRange(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {

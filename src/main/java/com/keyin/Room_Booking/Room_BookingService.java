@@ -166,9 +166,6 @@ public class Room_BookingService {
         }
         return availableRooms;
     }
-
-//    public List<Room_Booking> getRoomBookingsByUsername(String username) {
-//    }
 }
 
 

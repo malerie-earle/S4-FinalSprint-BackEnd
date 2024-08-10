@@ -2,13 +2,11 @@ package com.keyin.Activity_Booking;
 import com.keyin.Activities.Activity;
 import com.keyin.Users.User;
 import com.keyin.Users.UserRepository;
-import com.keyin.Users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -47,10 +45,12 @@ public class Activity_BookingController {
         return activityBookingService.getActivityBookingsByUserId(user_id);
     }
 
-//    @GetMapping("/activities/bookings/username/{username}")
-//    public List<Activity_Booking> getActivityBookingsByUsername(@PathVariable String username){
-//        return activityBookingService.getActivityBookingsByUsername(username);
-//    }
+    @GetMapping("/activities/bookings/username")
+    public List<Activity_Booking> getActivityBookingsByUsername(@RequestParam String username) {
+        User user = userRepository.findByUsername(username);
+        long userId = user.getUserId();
+        return activityBookingService.getActivityBookingsByUserId(userId);
+    }
 
     @GetMapping("/activities/bookings/activity/{activity_id}")
     public List<Activity_Booking> getActivityBookingsByActivityId(@PathVariable Long activity_id){
